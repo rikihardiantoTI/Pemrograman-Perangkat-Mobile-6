@@ -4,7 +4,9 @@ import '../models/post.dart';
 import '../services/post_services.dart';
 
 class AddPostScreen extends StatefulWidget {
-  const AddPostScreen({super.key});
+  const AddPostScreen({super.key, this.service});
+
+  final PostService? service;
 
   @override
   State<AddPostScreen> createState() => _AddPostScreenState();
@@ -14,8 +16,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _bodyController = TextEditingController();
-  final PostService _service = PostService();
-
   bool _isSubmitting = false;
 
   @override
@@ -51,7 +51,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
         body: _bodyController.text.trim(),
       );
 
-      final created = await _service.createPost(newPost);
+      final created = await (widget.service ?? PostService()).createPost(
+        newPost,
+      );
 
       if (!mounted) return;
       // Kirim hasilnya kembali ke Home Screen.

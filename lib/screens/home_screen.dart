@@ -6,16 +6,18 @@ import 'add_post_screen.dart';
 import 'detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({super.key, this.service});
+
+  final PostService? service;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final PostService _service = PostService();
   final TextEditingController _searchController = TextEditingController();
 
+  late final PostService _service = widget.service ?? PostService();
   late Future<List<Post>> _future;
   List<Post> _posts = [];
   bool _newestFirst = true;
@@ -59,7 +61,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _openAddPost() async {
     final created = await Navigator.push<Post>(
       context,
-      MaterialPageRoute(builder: (_) => const AddPostScreen()),
+      MaterialPageRoute(
+        builder: (_) => AddPostScreen(service: _service),
+      ),
     );
 
     if (created != null && mounted) {
